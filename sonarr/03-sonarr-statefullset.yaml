@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: sonarr
+spec:
+  serviceName: "sonarr-headless"
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sonarr
+  template:
+    metadata:
+      labels:
+        app: sonarr
+    spec:
+      containers:
+      - name: sonarr
+        image: linuxserver/sonarr:preview
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "Europe/London"
+        - name: UMASK_SET
+          value: "022"
+        ports:
+        - containerPort: 8989
+          name: web
+        volumeMounts:
+        - name: nfs-sonarr-config
+          mountPath: /config
+      volumes:
+      - name: nfs-sonarr-config
+        persistentVolumeClaim:
+          claimName: sonarr-config

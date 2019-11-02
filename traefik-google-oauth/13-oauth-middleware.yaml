@@ -1,0 +1,11 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: google-oauth
+spec:
+  forwardAuth:
+    address: http://traefik-forward-auth-service
+    authResponseHeaders:
+      - X-Forwarded-User
+    tls:
+      insecureSkipVerify: true

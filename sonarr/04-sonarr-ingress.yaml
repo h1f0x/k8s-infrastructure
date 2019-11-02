@@ -1,0 +1,42 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: sonarr-ingress-web
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: Host(`sonarr.<EXAMPLE.COM>`)
+    kind: Rule
+    middlewares:
+    - name: redirect
+    services:
+    - name: sonarr-service
+      port: 8989
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: sonarr-ingress-websecure
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`sonarr.<EXAMPLE.COM>`)
+    kind: Rule
+    middlewares:
+    - name: google-oauth
+    services:
+    - name: sonarr-service
+      port: 8989
+  tls:
+    certResolver: default
+    options: 
+      name: mintls12
+      namespace: default

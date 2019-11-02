@@ -1,0 +1,42 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: radarr-ingress-web
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: Host(`radarr.<EXAMPLE.COM>`)
+    kind: Rule
+    middlewares:
+    - name: redirect
+    services:
+    - name: radarr-service
+      port: 7878
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: radarr-ingress-websecure
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`radarr.<EXAMPLE.COM>`)
+    kind: Rule
+    middlewares:
+    - name: google-oauth
+    services:
+    - name: radarr-service
+      port: 7878
+  tls:
+    certResolver: default
+    options: 
+      name: mintls12
+      namespace: default

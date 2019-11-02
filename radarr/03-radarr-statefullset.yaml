@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: radarr
+spec:
+  serviceName: "radarr-headless"
+  replicas: 2
+  selector:
+    matchLabels:
+      app: radarr
+  template:
+    metadata:
+      labels:
+        app: radarr
+    spec:
+      containers:
+      - name: radarr
+        image: linuxserver/radarr:preview
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "Europe/London"
+        - name: UMASK_SET
+          value: "022"
+        ports:
+        - containerPort: 7878
+          name: web
+        volumeMounts:
+        - name: nfs-radarr-config
+          mountPath: /config
+      volumes:
+      - name: nfs-radarr-config
+        persistentVolumeClaim:
+          claimName: radarr-config

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonarr-headless
+  labels:
+    app: sonarr
+spec:
+  ports:
+  - port: 8989
+    name: web
+  clusterIP: None
+  selector:
+    app: sonarr

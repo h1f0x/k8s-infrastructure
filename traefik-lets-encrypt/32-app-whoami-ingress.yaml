@@ -1,0 +1,40 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: whoami-ingress-web
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: Host(`whoami.<EXAMPLE.COM>`)
+    kind: Rule
+    middlewares:
+    - name: redirect
+    services:
+    - name: whoami-service
+      port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: whoami-ingress-websecure
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`whoami.<EXAMPLE.COM>`)
+    kind: Rule
+    services:
+    - name: whoami-service
+      port: 80
+  tls:
+    certResolver: default
+    options: 
+      name: mintls12
+      namespace: default
