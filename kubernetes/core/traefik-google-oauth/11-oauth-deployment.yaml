@@ -35,7 +35,7 @@ spec:
                   name: traefik-forward-auth-secrets
                   key: SECRET
             - name: INSECURE_COOKIE
-              value: 'true'
+              value: 'false'
             - name: COOKIE_DOMAIN
               value: <EXAMPLE.COM>
             - name: DOMAINS

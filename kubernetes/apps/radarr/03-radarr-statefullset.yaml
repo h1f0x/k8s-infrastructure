@@ -35,3 +35,4 @@ spec:
       - name: nfs-radarr-config
         persistentVolumeClaim:
           claimName: radarr-config
+      restartPolicy: Always

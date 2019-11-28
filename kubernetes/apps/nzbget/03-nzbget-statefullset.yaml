@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nzbget
+spec:
+  serviceName: "nzbget-headless"
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nzbget
+  template:
+    metadata:
+      labels:
+        app: nzbget
+    spec:
+      containers:
+      - name: nzbget
+        image: linuxserver/nzbget:latest
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "Europe/Zurich"
+        ports:
+        - containerPort: 8989
+          name: web
+        volumeMounts:
+        - name: nfs-nzbget-config
+          mountPath: /config
+      volumes:
+      - name: nfs-nzbget-config
+        persistentVolumeClaim:
+          claimName: nzbget-config
+      restartPolicy: Always

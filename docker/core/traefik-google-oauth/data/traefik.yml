@@ -1,0 +1,25 @@
+api:
+  dashboard: true
+
+entryPoints:
+  http:
+    address: ":80"
+  https:
+    address: ":443"
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+  file:
+    filename: /config.yml
+
+certificatesResolvers:
+  http:
+    acme:
+      email: <YOUR_EMAIL_ADDRESS>
+      storage: acme.json
+      # this is the staging server, to switch to prod server, just comment out
+      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      httpChallenge:
+        entryPoint: http

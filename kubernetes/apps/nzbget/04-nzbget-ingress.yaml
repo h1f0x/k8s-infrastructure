@@ -1,0 +1,42 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: nzbget-ingress-web
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: Host(`nzbget.<EXAMPLE.COM>`)
+    kind: Rule
+    middlewares:
+    - name: redirect
+    services:
+    - name: nzbget-service
+      port: 6789
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: nzbget-ingress-websecure
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`nzbget.<EXAMPLE.COM>`)
+    kind: Rule
+    middlewares:
+    - name: google-oauth
+    services:
+    - name: nzbget-service
+      port: 6789
+  tls:
+    certResolver: default
+    options: 
+      name: mintls12
+      namespace: default

@@ -1,0 +1,51 @@
+tls:
+  options:
+    default:
+      minVersion: VersionTLS12
+      cipherSuites:
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+
+http:
+  middlewares:
+    https-redirect:
+      redirectScheme:
+        scheme: https
+
+    default-headers:
+      headers:
+        frameDeny: true
+        sslRedirect: true
+        browserXssFilter: true
+        contentTypeNosniff: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+
+    default-whitelist:
+      ipWhiteList:
+        sourceRange:
+        - "10.0.0.0/24"
+        - "192.168.0.0/16"
+        - "172.0.0.0/8"
+
+    google-auth:
+      forwardAuth:
+        address: "http://traefik-forward-auth:4181"
+        authResponseHeaders:
+          - "X-Forwarded-User"
+        trustForwardHeader: true
+
+    secured:
+      chain:
+        middlewares:
+        - default-headers
+
+    google-auth-secured:
+      chain:
+        middlewares:
+        - default-headers
+        - google-auth

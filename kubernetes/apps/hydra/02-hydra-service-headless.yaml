@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hydra-headless
+  labels:
+    app: hydra
+spec:
+  ports:
+  - port: 5076
+    name: web
+  clusterIP: None
+  selector:
+    app: hydra

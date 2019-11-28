@@ -21,3 +21,4 @@ spec:
         ports:
           - name: web
             containerPort: 80
+      restartPolicy: Always

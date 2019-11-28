@@ -35,3 +35,4 @@ spec:
       - name: nfs-sonarr-config
         persistentVolumeClaim:
           claimName: sonarr-config
+      restartPolicy: Always
